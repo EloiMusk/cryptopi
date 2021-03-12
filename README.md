@@ -5,4 +5,4 @@ Feel free to contribute
 
 ## Wiring
 
-![schematics+layout](C:\Users\eliot\IdeaProjects\Crypto-Monitor\ManagementBoard\artifacts\doc\schematics+layout.png)
+![schematics+layout](\ManagementBoard\artifacts\doc\schematics+layout.png)
