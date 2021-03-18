@@ -7,9 +7,11 @@ import RPi.GPIO as GPIO
 
 class Encoder:
 
-    def __init__(self, leftPin, rightPin, callback=None):
+    def __init__(self, leftPin, rightPin, sw, callback=None):
+        print("rencoder library started")
         self.leftPin = leftPin
         self.rightPin = rightPin
+        self.sw = sw
         self.value = 0
         self.state = '00'
         self.direction = None
@@ -17,13 +19,19 @@ class Encoder:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.leftPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(self.rightPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+        GPIO.setup(self.sw, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(self.leftPin, GPIO.BOTH, callback=self.transitionOccurred)  
         GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)  
+        GPIO.add_event_detect(self.sw, GPIO.BOTH, callback=self.transitionOccurred)  
 
     def transitionOccurred(self, channel):
+        print("transition Occured!!")
         p1 = GPIO.input(self.leftPin)
         p2 = GPIO.input(self.rightPin)
+        p3 = GPIO.input(self.sw)
         newState = "{}{}".format(p1, p2)
+        if channel == p3:
+            print("sw click")
 
         if self.state == "00": # Resting position
             if newState == "01": # Turned right 1

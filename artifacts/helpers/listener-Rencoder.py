@@ -5,12 +5,12 @@ from rencoder import Encoder
 def valueChanged(value):
     print("* New value: {}".format(value))
 
-e1 = Encoder(16, 18, valueChanged)
-
+e1 = Encoder(4, 5, 6, callback=valueChanged)
+tic = 0
 try:
     while True:
-        time.sleep(5)
-        print("Value is {}".format(e1.getValue()))
+        tic = tic + 1
+        time.sleep(0.1)
 except Exception:
     pass
 
