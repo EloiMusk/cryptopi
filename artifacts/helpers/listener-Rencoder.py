@@ -1,12 +1,16 @@
 import time
-import RPi.GPIO as GPIO
 from rencoder import Encoder
 
 def valueChanged(value):
     print("* New value: {}".format(value))
 
-e1 = Encoder(4, 5, 6, callback=valueChanged)
+
+
+e1 = Encoder(23, 24, 5, callback=valueChanged)
+sw = 25
 tic = 0
+
+
 try:
     while True:
         tic = tic + 1

@@ -7,31 +7,30 @@ import RPi.GPIO as GPIO
 
 class Encoder:
 
-    def __init__(self, leftPin, rightPin, sw, callback=None):
-        print("rencoder library started")
+    def __init__(self, leftPin, rightPin, siteCount, page=0, callback=None):
         self.leftPin = leftPin
         self.rightPin = rightPin
-        self.sw = sw
-        self.value = 0
+        self.value = page
         self.state = '00'
         self.direction = None
         self.callback = callback
+        self.siteCount = siteCount
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.leftPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
         GPIO.setup(self.rightPin, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
-        GPIO.setup(self.sw, GPIO.IN, pull_up_down=GPIO.PUD_UP)
         GPIO.add_event_detect(self.leftPin, GPIO.BOTH, callback=self.transitionOccurred)  
-        GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)  
-        GPIO.add_event_detect(self.sw, GPIO.BOTH, callback=self.transitionOccurred)  
+        GPIO.add_event_detect(self.rightPin, GPIO.BOTH, callback=self.transitionOccurred)
+
+    def scroller(self):
+        if self.value > self.siteCount:
+            self.value = 0
+        elif self.value < 0:
+            self.value = self.siteCount
 
     def transitionOccurred(self, channel):
-        print("transition Occured!!")
         p1 = GPIO.input(self.leftPin)
         p2 = GPIO.input(self.rightPin)
-        p3 = GPIO.input(self.sw)
         newState = "{}{}".format(p1, p2)
-        if channel == p3:
-            print("sw click")
 
         if self.state == "00": # Resting position
             if newState == "01": # Turned right 1
@@ -45,6 +44,7 @@ class Encoder:
             elif newState == "00": # Turned left 1
                 if self.direction == "L":
                     self.value = self.value - 1
+                    self.scroller()
                     if self.callback is not None:
                         self.callback(self.value)
 
@@ -54,6 +54,7 @@ class Encoder:
             elif newState == "00": # Turned right 1
                 if self.direction == "R":
                     self.value = self.value + 1
+                    self.scroller()
                     if self.callback is not None:
                         self.callback(self.value)
 
@@ -65,13 +66,15 @@ class Encoder:
             elif newState == "00": # Skipped an intermediate 01 or 10 state, but if we know direction then a turn is complete
                 if self.direction == "L":
                     self.value = self.value - 1
+                    self.scroller()
                     if self.callback is not None:
                         self.callback(self.value)
                 elif self.direction == "R":
                     self.value = self.value + 1
+                    self.scroller()
                     if self.callback is not None:
                         self.callback(self.value)
-                
+        
         self.state = newState
 
     def getValue(self):

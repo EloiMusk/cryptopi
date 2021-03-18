@@ -3,4 +3,6 @@ sudo apt-get install i2c-tools
 https://gist.github.com/DenisFromHR/cc863375a6e19dce359d
 https://www.circuitbasics.com/raspberry-pi-i2c-lcd-set-up-and-programming/
 https://omerk.github.io/lcdchargen/ #Char generator
-
+# Potentiometer
+https://blog.sharedove.com/adisjugo/index.php/2020/05/10/using-ky-040-rotary-encoder-on-raspberry-pi-to-control-volume/
+https://i.pinimg.com/originals/d3/54/b3/d354b355f32411b050f6772fe14e9780.png

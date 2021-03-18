@@ -47,13 +47,15 @@ echo $distPath
 sudo sed -i "s|DocumentRoot.*|DocumentRoot $distPath|g" /etc/apache2/sites-enabled/000-default.conf
 gecho "Document root adjusted"
 cecho "Setting permissions for the webserver"
-
+sed -i '/start of generated section/,/end of generated section/d' /etc/apache2/apache2.conf
 sudo cat <<EOT >> /etc/apache2/apache2.conf
+# start of generated section
 <Directory $distPath>
         Options Indexes FollowSymLinks
         AllowOverride None
         Require all granted
 </Directory>
+# end of generated section
 EOT
 gecho "Permissions set"
 cecho "Restarting webserver"
@@ -68,7 +70,7 @@ Description=Cryptopi input Listener
 [Service]
 User=root
 WorkingDirectory=/opt/cryptopi/artifacts/helpers
-ExecStart=python3 /opt/cryptopi/artifacts/helpers/listener.sh
+ExecStart=/opt/cryptopi/artifacts/helpers/listener.sh
 Restart=always
 
 [Install]
