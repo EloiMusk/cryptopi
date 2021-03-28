@@ -13,13 +13,15 @@ def valueChanged(value):
 def buttonclk(value):
     global backlight_state
     button_state = GPIO.input(value)
-    print("button clicked")
     if button_state == 0:
         backlight_state = not backlight_state
         printer.backlight_ctl(backlight_state)
+        print("Backlight changed to {}".format(backlight_state))
+
         sleep(0.5)
 
 #Variabels
+printer = printer.printer()
 Button = 20
 backlight_state = 1
 Tic = 0
